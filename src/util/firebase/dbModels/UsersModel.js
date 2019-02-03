@@ -48,7 +48,7 @@ class UsersModel {
     const user_id = this.getCurrentUserId();
     this.usersRef
       .doc(user_id)
-      .collections("myOutings")
+      .collection("myOutings")
       .doc(outing_id)
       .set({
         datetime: datetime
