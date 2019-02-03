@@ -19,7 +19,7 @@ class GroupsModel {
   //    str: "" if not going, "pending" if unconfirmed, "going" if confirmed
   subscribeUserStatus(outing_id, user_id, onSnapshot) {
     if (!this.userStatusUnsubscriber) {
-      this.userStatusUnsubscriber = this.outingsRef
+      this.userStatusUnsubscriber = this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("user_id", "==", user_id)
@@ -35,7 +35,7 @@ class GroupsModel {
 
   // returns "" if not going, "pending" if unconfirmed, "going" if confirmed
   async getUserStatus(outing_id, user_id) {
-    const querySnapshot = await this.db.outingsRef
+    const querySnapshot = await this.db.outings.outingsRef
       .doc(outing_id)
       .collection("attendees")
       .where("user_id", "==", user_id)
@@ -106,7 +106,7 @@ class GroupsModel {
   //    str: status="pending"
   subscribeNextPending(nextPendingObj, outing_id) {
     if (!this.nextPendingUnsubscriber) {
-      this.nextPendingUnsubscriber = this.outingsRef
+      this.nextPendingUnsubscriber = this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("status", "==", "pending")
@@ -135,7 +135,7 @@ class GroupsModel {
   //    str: status
   subscribeAttendees(attendeesArray, outing_id) {
     if (!this.attendeesUnsubscriber) {
-      this.attendeesUnsubscriber = this.outingsRef
+      this.attendeesUnsubscriber = this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .onSnapshot(querySnapshot => {
@@ -161,7 +161,7 @@ class GroupsModel {
   //    str: status="pending"
   subscribePending(pendingArray, outing_id) {
     if (!this.pendingUnsubscriber) {
-      this.pendingUnsubscriber = this.outingsRef
+      this.pendingUnsubscriber = this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("status", "==", "pending")
@@ -188,7 +188,7 @@ class GroupsModel {
   //    str: status="going"
   subscribeGoing(goingArray, outing_id) {
     if (!this.goingUnsubscriber) {
-      this.goingUnsubscriber = this.outingsRef
+      this.goingUnsubscriber = this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("status", "==", "going")
