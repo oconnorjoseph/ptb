@@ -1,7 +1,7 @@
 class UsersModel {
   constructor(db) {
     this.db = db;
-    this.usersRef = this.db.collection("users");
+    this.usersRef = db.dbRef.collection("user");
     this.userEventsUnsubscriber;
   }
 

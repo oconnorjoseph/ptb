@@ -40,40 +40,10 @@
           <h6 class="card-text text-left pl-4">{{desc}}</h6>
         </div>
       </div>
+      <hr>
       <div class="row py-2">
         <div class="col">
-          <button
-            v-if="false"
-            type="button"
-            class="btn btn-primary float-right"
-            @click="onGoBtnClicked()"
-          >
-            <span style="font-size: 16px;">
-              <i class="fa fa-plus text-white mr-2"/>Let's Go!
-            </span>
-          </button>
-          <button v-if="true" class="btn btn-success disabled disabled-light pr-3 float-right">
-            <span style="font-size: 16px;">
-              <i class="fa fa-check text-white mr-2"/>Going
-            </span>
-          </button>
-          <button
-            v-if="true"
-            type="button"
-            class="btn btn-warning disabled disabled-light px-3 float-right"
-          >
-            <span style="font-size: 16px;">Pending...</span>
-          </button>
-          <button
-            v-if="true"
-            type="button"
-            class="btn btn-danger pr-3 float-right"
-            @click="onCancelBtnClicked()"
-          >
-            <span style="font-size: 16px;">
-              <i class="fa fa-times text-white mr-2"/>Cancel
-            </span>
-          </button>
+          <outing-status :db="db" class="float-right"/>
         </div>
       </div>
     </div>
@@ -93,6 +63,9 @@ const FORMATTED_DATE_OPTIONS = {
 
 export default {
   name: "OutingCard",
+  components: {
+    OutingStatus: () => import("./OutingStatus.vue")
+  },
   props: {
     outing: {
       type: Object,
@@ -112,16 +85,23 @@ export default {
     };
   },
   methods: {
-    onGoBtnClicked: function() {
-      //
+    resetDetails: function() {
+      this.organizer = null;
+      this.location = null;
+      this.desc = null;
     },
-    onOutingSnapshot: function(data) {
-      this.organizer = data.organizer;
+    fetchFullName: async function(organizer_id) {
+      const organizer = await this.db.users.getName(organizer_id);
+      return organizer.firstName + " "  + organizer.lastName;
+    },
+    onOutingSnapshot: async function(data) {
+      this.organizer = await this.fetchFullName(data.organizer_id);
       this.location = data.location;
       this.desc = data.desc;
     },
     detatchOutingDetails: function() {
       this.db.outings.unsubscribeOuting(this.outing.id);
+      this.resetDetails();
     },
     attachOutingDetails: function() {
       this.db.outings.subscribeOuting(this.outing.id, this.onOutingSnapshot);
@@ -143,7 +123,7 @@ export default {
       return date.toLocaleString(undefined, FORMATTED_DATE_OPTIONS);
     },
     hasDetails: function() {
-      return this.desc;
+      return this.desc || this.location || this.organizer;
     }
   },
   destroyed: function() {
@@ -151,18 +131,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.disabled,
-.disabled-light {
-  opacity: 1;
-}
-.btn-warning:focus,
-.disabled-light {
-  box-shadow: none;
-}
-.btn-success:focus,
-.disabled-light {
-  box-shadow: none;
-}
-</style>

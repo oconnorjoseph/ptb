@@ -17,18 +17,18 @@ class GroupsModel {
 
   // userStatusObj =>
   //    str: "" if not going, "pending" if unconfirmed, "going" if confirmed
-  subscribeUserStatus(userStatusObj, outing_id, user_id) {
+  subscribeUserStatus(outing_id, user_id, onSnapshot) {
     if (!this.userStatusUnsubscriber) {
       this.userStatusUnsubscriber = this.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("user_id", "==", user_id)
         .onSnapshot(querySnapshot => {
-          if (querySnapshot.empty) {
-            userStatusObj.status = "";
-          } else {
-            userStatusObj.status = querySnapshot.data().status;
+          var status = "";
+          if (!querySnapshot.empty) {
+            status = querySnapshot.data().status;
           }
+          onSnapshot(status);
         });
     }
   }
