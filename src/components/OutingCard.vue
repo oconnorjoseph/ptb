@@ -43,7 +43,7 @@
       <hr>
       <div class="row py-2">
         <div class="col">
-          <outing-status :db="db" class="float-right"/>
+          <outing-status :db="db" class="float-right" :outing-id="outingId"/>
         </div>
       </div>
     </div>
@@ -70,6 +70,10 @@ export default {
     outing: {
       type: Object,
       required: false
+    },
+    outingId: {
+      type: String,
+      required: true
     },
     db: {
       type: Object,
@@ -100,11 +104,11 @@ export default {
       this.desc = data.desc;
     },
     detatchOutingDetails: function() {
-      this.db.outings.unsubscribeOuting(this.outing.id);
+      this.db.outings.unsubscribeOuting(this.outingId);
       this.resetDetails();
     },
     attachOutingDetails: function() {
-      this.db.outings.subscribeOuting(this.outing.id, this.onOutingSnapshot);
+      this.db.outings.subscribeOuting(this.outingId, this.onOutingSnapshot);
     }
   },
   watch: {
