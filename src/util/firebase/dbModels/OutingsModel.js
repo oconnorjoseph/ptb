@@ -147,7 +147,7 @@ class OutingsModel {
       this.userOutingStatusUnsubscribers[outing_id].push(
         this.outingsRef.doc(outing_id).onSnapshot(querySnapshot => {
           this.userOutingData[outing_id].outingFull =
-            querySnapshot.data().max_people >= querySnapshot.data().going_count;
+            querySnapshot.data().max_people <= querySnapshot.data().going_count;
           this.userOutingData[
             outing_id
           ].closedOuting = querySnapshot.data().closed;
@@ -176,7 +176,7 @@ class OutingsModel {
   async canAddUser(outing_id, user_id, allowed = false) {
     const querySnapshot = await this.outingsRef.doc(outing_id).get();
     const outingFull =
-      querySnapshot.data().max_people >= querySnapshot.data().going_count;
+      querySnapshot.data().max_people <= querySnapshot.data().going_count;
     const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
     const closedOuting = querySnapshot.data().closed;
     if ((!closedOuting || allowed) && userStatus != "going" && !outingFull) {
