@@ -34,7 +34,7 @@ class OutingsModel {
     outingRef.collection("attendees").add({
       uid: organizer_id,
       joined: this.db.FieldValue.serverTimestamp(),
-      role: "going"
+      status: "going"
     });
     return outingRef.id;
   }
@@ -84,13 +84,13 @@ class OutingsModel {
     }
   }
   // returns all event objects as a list of json objects
-  async subscribeOuting(outingData, outing_id) {
+  async subscribeOuting(outingObj, outing_id) {
     if (!this.outingUnsubscriber) {
       this.outingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .onSnapshot(querySnapshot => {
-          outingData = querySnapshot.data();
-          outingData.id = outing_id;
+          outingObj = querySnapshot.data();
+          outingObj.id = outing_id;
         });
     }
   }
