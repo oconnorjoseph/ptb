@@ -9,6 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@onekiloparsec/vue-xeditable": "^1.0.4",
     "boostrap": "^2.0.0",
     "bootstrap": "^4.2.1",
     "bootstrap-editable": "^1.0.1",
