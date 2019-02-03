@@ -76,7 +76,7 @@ class UsersModel {
           outingsArray.length = 0;
           var promises = [];
           querySnapshot.forEach(doc => {
-            promises.push(this.db.outingsRef.doc(doc.id).get());
+            promises.push(this.db.outings.outingsRef.doc(doc.id).get());
           });
           var outingsSnapshot = await Promise.all(promises);
           outingsSnapshot.forEach(doc => {
@@ -119,7 +119,7 @@ class UsersModel {
           var promises = [];
           var statuses = [];
           querySnapshot.forEach(doc => {
-            promises.push(this.db.outingsRef.doc(doc.id).get());
+            promises.push(this.db.outings.doc(doc.id).get());
             statuses.push(doc.data().status);
           });
           const outingsSnapshot = await Promise.all(promises);
