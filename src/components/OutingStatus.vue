@@ -37,7 +37,7 @@
 const AVAILABLE = "AVAILABLE";
 const GOING = "GOING";
 const PENDING = "PENDING";
-const WAITLIST_AVAILABLE = "WAITLIST_AVAILABLE";
+const WAITLIST_AVAILABLE = "WAITLIST AVAILABLE";
 
 export default {
   name: "OutingStatus",
@@ -72,16 +72,15 @@ export default {
   },
   methods: {
     onGoBtnClicked: function() {
-      this.db.groups.addCurrentUser(this.outingId);
+      this.db.groups.addUser(this.outingId);
     },
     onCancelBtnClicked: function() {
-      this.db.groups.removeCurrentUser(this.outingId);
+      //TODO: this.db.groups.removeUser(this.outingId);
     },
     onWaitlistBtnClicked: function() {
-      this.db.groups.addCurrentUser(this.outingId);
+      this.db.groups.addUser(this.outingId);
     },
-    onSnapshot: (userOutingStatus) => {
-      console.log(userOutingStatus);
+    onSnapshot: function(userOutingStatus) {
       this.userOutingStatus = userOutingStatus;
     }
   },
