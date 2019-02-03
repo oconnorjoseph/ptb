@@ -76,13 +76,13 @@ class OutingsModel {
 
   async updateAllOutings() {
     const querySnapshot = await this.outingsRef.get();
-    querySnapshot.forEach(async (doc) => {
+    querySnapshot.forEach(async doc => {
       this.db.users.makeOuting(doc.id, doc.data().datetime);
-      const attendees = await doc.ref.collection("attendees").get();
-      attendees.forEach(doc => {
+      const attendees = await doc.collection("attendees").get();
+      attendees.forEach(attendee => {
         this.db.users.setOuting(
           doc.id,
-          doc.data().user_id,
+          attendee.data().user_id,
           doc.data().status,
           doc.data().datetime
         );
