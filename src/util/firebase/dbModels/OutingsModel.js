@@ -48,7 +48,6 @@ class OutingsModel {
     this.update(outing_id, { deleted: true });
   }
 
-
   unsubscribeAllOutings() {
     if (this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber();
@@ -56,7 +55,7 @@ class OutingsModel {
     }
   }
   // returns all event objects as a list of json objects
-  async subscribeAllOutings(outingsArray) {
+  subscribeAllOutings(outingsArray) {
     if (!this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber = this.outingsRef
         .where("deleted", "==", false)
@@ -76,7 +75,6 @@ class OutingsModel {
     }
   }
 
-
   unsubscribeOuting() {
     if (this.outingUnsubscriber) {
       this.outingUnsubscriber();
@@ -85,21 +83,25 @@ class OutingsModel {
   }
 
   // returns all event objects as a list of json objects
-  async subscribeOuting(outingObj, outing_id) {
+  subscribeOuting(outingObj, outing_id) {
     if (!this.outingUnsubscriber) {
       this.outingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .onSnapshot(querySnapshot => {
-          outingObj = querySnapshot.data();
+          const data = querySnapshot.data();
+          data.keys().forEach(key => {
+            outingObj[key] = data[key];
+          });
           outingObj.id = outing_id;
         });
     }
   }
 
   // returns the max status a user is allowed for an event
-  async canAddUser(outing_id, user_id, allowed=false) {
+  async canAddUser(outing_id, user_id, allowed = false) {
     const querySnapshot = await this.outingsRef.doc(outing_id).get();
-    const outingFull = querySnapshot.data().max_people >= querySnapshot.data().going_count;
+    const outingFull =
+      querySnapshot.data().max_people >= querySnapshot.data().going_count;
     const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
     const closedOuting = querySnapshot.data().closed;
     if ((!closedOuting || allowed) && userStatus != "going" && !outingFull) {
