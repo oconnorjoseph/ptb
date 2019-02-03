@@ -119,6 +119,9 @@ class OutingsModel {
 
   subscribeUserOutingStatus(outing_id, OnSnapshot) {
     const user_id = this.db.users.getCurrentUserId();
+    if (!this.userOutingData[outing_id]) {
+      this.userOutingData[outing_id] = {};
+    }
     const decision = function(outing_id) {
       if (Object.keys(this.userOutingData[outing_id]).length == 3) {
         const userStatus = this.userOutingData[outing_id].userStatus;
