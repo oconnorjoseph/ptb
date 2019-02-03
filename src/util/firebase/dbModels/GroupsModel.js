@@ -35,7 +35,7 @@ class GroupsModel {
 
   // returns "" if not going, "pending" if unconfirmed, "going" if confirmed
   async getUserStatus(outing_id, user_id) {
-    const querySnapshot = await this.outingsRef
+    const querySnapshot = await this.db.outingsRef
       .doc(outing_id)
       .collection("attendees")
       .where("user_id", "==", user_id)
