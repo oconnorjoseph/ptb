@@ -3,6 +3,11 @@ class UsersModel {
     this.db = db;
     this.usersRef = db.dbRef.collection("user");
     this.userOutingsUnsubscriber;
+    this.myOutingsUnsubscriber;
+  }
+
+  getCurrentUserId() {
+    return this.db.dbRef.auth().currentUser.uid;
   }
 
   // adds names to usersArray
@@ -39,16 +44,70 @@ class UsersModel {
     };
   }
 
-  unsubscribeUserEvents() {
-    if (this.userEventsUnsubscriber) {
-      this.userEventsUnsubscriber();
-      this.userEventsUnsubscriber = null;
+  async makeOuting(outing_id, datetime) {
+    const user_id = this.getCurrentUserId();
+    this.db.usersRef
+      .doc(user_id)
+      .collections("myOutings")
+      .doc(outing_id)
+      .set({
+        datetime: datetime
+      });
+  }
+
+  unsubscribeMyOutings() {
+    if (this.myOutingsUnsubscriber) {
+      this.myOutingsUnsubscriber();
+      this.myOutingsUnsubscriber = null;
     }
   }
 
   // eventsArray =>
   //    all events user i
-  subscribeUserOutings(outingsArray, user_id) {
+  subscribeMyOutings(outingsArray) {
+    const user_id = this.getCurrentUserId();
+    if (!this.myOutingsUnsubscriber) {
+      this.myOutingsUnsubscriber = this.usersRef
+        .doc(user_id)
+        .collection("myOutings")
+        .sortBy("datetime")
+        .limit(20)
+        .onSnapshot(async querySnapshot => {
+          outingsArray.length = 0;
+          var promises = [];
+          querySnapshot.forEach(doc => {
+            promises.push(this.db.outingsRef.doc(doc.id).get());
+          });
+          var outingsSnapshot = await Promise.all(promises);
+          outingsSnapshot.forEach(doc => {
+            outingsArray.push(doc.data());
+          });
+        });
+    }
+  }
+
+  async setOuting(outing_id, user_id, status, datetime) {
+    this.db.usersRef
+      .doc(user_id)
+      .collections("outings")
+      .doc(outing_id)
+      .set({
+        status: status,
+        datetime: datetime
+      });
+  }
+
+  unsubscribeUserOutings() {
+    if (this.userOutingsUnsubscriber) {
+      this.userOutingsUnsubscriber();
+      this.userOutingsUnsubscriber = null;
+    }
+  }
+
+  // eventsArray =>
+  //    all events user i
+  subscribeUserOutings(outingsArray) {
+    const user_id = this.getCurrentUserId();
     if (!this.userOutingsUnsubscriber) {
       this.userOutingsUnsubscriber = this.usersRef
         .doc(user_id)
@@ -58,12 +117,16 @@ class UsersModel {
         .onSnapshot(async querySnapshot => {
           outingsArray.length = 0;
           var promises = [];
+          var statuses = [];
           querySnapshot.forEach(doc => {
             promises.push(this.db.outingsRef.doc(doc.id).get());
+            statuses.push(doc.data().status);
           });
           const outingsSnapshot = await Promise.all(promises);
-          outingsSnapshot.forEach(doc => {
-            outingsArray.push(doc.data());
+          outingsSnapshot.forEach((doc, i) => {
+            var data = doc.data();
+            data.status = statuses[i];
+            outingsArray.push(data);
           });
         });
     }

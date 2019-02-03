@@ -4,11 +4,12 @@ class OutingsModel {
     this.outingsRef = db.dbRef.collection("outings");
     this.allOutingsUnsubscriber;
     this.outingUnsubscribers = {};
+    this.userOutingStatusUnsubscribers = {};
+    this.userOutingData = {};
   }
 
   // creates outing, returns id of created outing
   async create(
-    organizer_id,
     outing_title,
     location,
     datetime,
@@ -18,7 +19,7 @@ class OutingsModel {
     closed = false
   ) {
     const outing = {
-      organizer_id: organizer_id,
+      organizer_id: this.db.users.getCurrentUserId(),
       title: outing_title,
       location: location,
       datetime: datetime,
@@ -94,21 +95,93 @@ class OutingsModel {
     }
   }
 
+  unsubscribeUserOutingStatus(outing_id) {
+    if (outing_id in this.userOutingStatusUnsubscribers) {
+      this.userOutingStatusUnsubscribers[outing_id].forEach(func => {
+        func();
+      });
+      delete this.userOutingStatusUnsubscribers[outing_id];
+      delete this.userOutingData[outing_id];
+    }
+  }
+
+  subscribeUserOutingStatus(outing_id, OnSnapshot) {
+    const user_id = this.db.users.getCurrentUserId();
+    const decision = function(outing_id) {
+      if (Object.keys(this.userOutingUnsubscribers[outing_id]).length == 3) {
+        const userStatus = this.userOutingUnsubscribers[outing_id].userStatus;
+        const closedOuting = this.userOutingUnsubscribers[outing_id].closedOuting;
+        const outingFull = this.userOutingUnsubscribers[outing_id].outingFull;
+        if (userStatus == "going") {
+          OnSnapshot("GOING");
+        } else if (!closedOuting && !outingFull) {
+          OnSnapshot("AVAILABLE");
+        } else if (userStatus == "pending") {
+          if (closedOuting) {
+            OnSnapshot("PENDING");
+          } else {
+            OnSnapshot("WAITLIST JOINED");
+          }
+        } else {
+          OnSnapshot("WAITLIST AVAILABLE");
+        }
+      }
+    };
+    if (!(outing_id in this.userOutingUnsubscribers)) {
+      this.userOutingUnsubscribers[outing_id] = [];
+      this.userOutingUnsubscribers[outing_id].push(
+        this.outingsRef.doc(outing_id).onSnapshot(querySnapshot => {
+          this.userOutingData[outing_id].outingFull =
+            querySnapshot.data().max_people >= querySnapshot.data().going_count;
+          this.userOutingData[
+            outing_id
+          ].closedOuting = querySnapshot.data().closed;
+          decision(outing_id);
+        })
+      );
+      this.userOutingUnsubscribers[outing_id].push(
+        this.outingsRef
+          .doc(outing_id)
+          .collection("attendees")
+          .where("user_id", "==", user_id)
+          .onSnapshot(querySnapshot => {
+            if (querySnapshot.empty) {
+              this.userOutingData[outing_id].userStatus == "";
+            } else {
+              this.userOutingData[outing_id].userStatus ==
+                querySnapshot.data().status;
+            }
+            decision(outing_id);
+          })
+      );
+    }
+  }
+
   // returns the max status a user is allowed for an event
-  async canAddUser(outing_id, user_id, allowed = false, final = false) {
+  async canAddUser(outing_id, user_id, allowed = false) {
     const querySnapshot = await this.outingsRef.doc(outing_id).get();
     const outingFull =
       querySnapshot.data().max_people >= querySnapshot.data().going_count;
     const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
     const closedOuting = querySnapshot.data().closed;
     if ((!closedOuting || allowed) && userStatus != "going" && !outingFull) {
-      if (final) {
-        this.outingsRef.doc(outing_id).update({
-          going_count: querySnapshot.data().going_count + 1
-        });
-      }
+      this.outingsRef.doc(outing_id).update({
+        going_count: querySnapshot.data().going_count + 1
+      });
+      this.users.setOuting(
+        outing_id,
+        user_id,
+        "going",
+        querySnapshot.data().datetime
+      );
       return "going";
     } else if (!userStatus) {
+      this.users.setOuting(
+        outing_id,
+        user_id,
+        "pending",
+        querySnapshot.data().datetime
+      );
       return "pending";
     } else {
       return "";
