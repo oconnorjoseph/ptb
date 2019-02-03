@@ -33,14 +33,13 @@ import {
   firebase,
   firebaseAuthentication,
   firestore,
-  firebaseFunctions
+  firebaseFunctions,
+  db
 } from "./util/firebase/index.js";
 import {
   subscribeUserInfo,
   unsubscribeUserInfo
 } from "./util/firebase/user.js";
-
-import db from "./util/firebase/index.js";
 
 export default {
   name: "app",
@@ -83,7 +82,8 @@ export default {
       "firstName",
       "lastName",
       "firestore",
-      "firebaseAuthentication"
+      "firebaseAuthentication",
+      "db"
     ])
   },
   watch: {
@@ -98,6 +98,7 @@ export default {
     this.initRouterHooks();
     this.commitFirebaseTools();
     subscribeUserInfo(this.$store, this.firestore);
+    this.db.outings.fetchAll().then(all => console.log(all));
   },
   destroyed: function() {
     unsubscribeUserInfo();

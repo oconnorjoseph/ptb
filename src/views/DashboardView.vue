@@ -15,7 +15,7 @@
 export default {
   name: "DashboardView",
   components: {
-    EventList: () => import("./../components/EventsList.vue")
+    //EventList: () => import("./../components/EventsList.vue")
   }
 };
 </script>
