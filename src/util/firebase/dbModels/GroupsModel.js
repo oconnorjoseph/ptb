@@ -45,6 +45,18 @@ class GroupsModel {
       });
   }
 
+  // confirms user from pending to going for a closed outing
+  async confirmUser(outing_id, user_id) {
+    this.db.outings
+      .doc(outing_id)
+      .collection("attendees")
+      .where("user_id", "==", user_id)
+      .get()
+      .then(querySnapshot => {
+        // assuming single result
+        querySnapshot.docs[0].ref.update({ status: "going" });
+      });
+  }
 
   unsubscribeAttendees() {
     if (this.attendeesUnsubscriber) {
@@ -71,14 +83,13 @@ class GroupsModel {
     }
   }
 
-
   unsubscribePending() {
     if (this.pendingUnsubscriber) {
       this.pendingUnsubscriber();
       this.pendingUnsubscriber = null;
     }
   }
-  
+
   // pendingArray => array with fields
   //    str: user_id
   //    timestamp: joined
@@ -98,14 +109,13 @@ class GroupsModel {
     }
   }
 
-
   unsubscribeGoing() {
     if (this.goingUnsubscriber) {
       this.goingUnsubscriber();
       this.goingUnsubscriber = null;
     }
   }
-  
+
   // goingArray => array with fields
   //    str: user_id
   //    timestamp: joined
@@ -124,7 +134,6 @@ class GroupsModel {
         });
     }
   }
-
 }
 
 export default GroupsModel;
