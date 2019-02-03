@@ -99,6 +99,9 @@ export default {
     this.commitFirebaseTools();
     subscribeUserInfo(this.$store, this.firestore);
   },
+  mounted: function() {
+    this.destroyLoader();
+  },
   destroyed: function() {
     unsubscribeUserInfo();
   }
