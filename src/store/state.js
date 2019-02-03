@@ -3,6 +3,7 @@ export default {
   firebaseAuthentication: null,
   firestore: null,
   firebaseFunctions: null,
+  db: null,
 
   isInvalidUser: null,
 

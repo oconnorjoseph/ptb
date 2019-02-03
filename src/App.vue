@@ -40,6 +40,8 @@ import {
   unsubscribeUserInfo
 } from "./util/firebase/user.js";
 
+import db from "./util/firebase/index.js";
+
 export default {
   name: "app",
   components: {
@@ -64,6 +66,7 @@ export default {
       this.$store.commit("firebaseAuthentication", firebaseAuthentication);
       this.$store.commit("firestore", firestore);
       this.$store.commit("firebaseFunctions", firebaseFunctions);
+      this.$store.commit("db", db);
     }
   },
   computed: {
