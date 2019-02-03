@@ -87,8 +87,8 @@ class UsersModel {
   }
 
   async setOuting(outing_id, user_id, status, datetime) {
-    this.db.usersRef
-      .doc(user_id)
+    this.usersRef
+      .doc(user_id) //TODO
       .collections("outings")
       .doc(outing_id)
       .set({
