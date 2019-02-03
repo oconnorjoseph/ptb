@@ -1,6 +1,6 @@
 {
-  "name": "ptb",
-  "short_name": "ptb",
+  "name": "Pop The Bubble",
+  "short_name": "PTB",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

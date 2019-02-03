@@ -1,10 +1,18 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import "./registerServiceWorker";
+import store from "./store/index.js";
+import router from "./router/index.js";
+import "./registerServiceWorker.js";
 
 Vue.config.productionTip = false;
+
+// Bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "./assets/css/bootstrap.min.css";
+// Font-Awesome
+import "font-awesome/css/font-awesome.css";
+// Vue-Loading-Overlay-Plugin
+import "./plugins/loadingOverlay.js";
 
 new Vue({
   router,

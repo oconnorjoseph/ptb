@@ -1,5 +1,5 @@
 {
-  "name": "ptb",
+  "name": "pop-the-bubble",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,15 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "bootstrap": "^4.2.1",
+    "firebase": "^5.8.2",
+    "firebaseui": "^3.5.2",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1",
     "register-service-worker": "^1.5.2",
+    "velocity-animate": "^1.5.2",
     "vue": "^2.5.22",
+    "vue-loading-overlay": "^3.1.1",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

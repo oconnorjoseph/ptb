@@ -1,31 +1,116 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div v-if="isInvalidUser !== null">
+      <transition name="fade-in-only-slow">
+        <the-authentication
+          v-if="!isReady"
+          :is-invalid-email="isInvalidUser"
+          :firebase-authentication="firebaseAuthentication"
+        />
+        <div class="container-fluid" v-if="isReady">
+          <div class="row">
+            <div class="col">
+              <transition name="fade-in-only">
+                <router-view/>
+              </transition>
+            </div>
+          </div>
+        </div>
+      </transition>
     </div>
-    <router-view />
   </div>
 </template>
 
+<script>
+import { mapState } from "vuex";
+import loader from "./mixins/loader.js";
+import {
+  firebase,
+  firebaseAuthentication,
+  firestore,
+  firebaseFunctions
+} from "./util/firebase/index.js";
+import {
+  subscribeUserInfo,
+  unsubscribeUserInfo
+} from "./util/firebase/user.js";
+
+export default {
+  name: "app",
+  components: {
+    TheAuthentication: () => import("./views/TheAuthentication.vue")
+  },
+  mixins: [loader],
+  methods: {
+    initRouterHooks: function() {
+      this.$router.beforeResolve((to, from, next) => {
+        if (to.name) {
+          this.mountLoader();
+        }
+        next();
+      });
+      this.$router.afterEach(() => {
+        this.destroyLoader();
+      });
+    },
+    commitFirebaseTools: function() {
+      this.$store.commit("firebase", firebase);
+      this.$store.commit("firebaseAuthentication", firebaseAuthentication);
+      this.$store.commit("firestore", firestore);
+      this.$store.commit("firebaseFunctions", firebaseFunctions);
+    }
+  },
+  computed: {
+    isReady: function() {
+      return (
+        this.uid &&
+        this.firstName !== null &&
+        this.lastName !== null
+      );
+    },
+    ...mapState([
+      "isInvalidUser",
+      "uid",
+      "firstName",
+      "lastName",
+      "firestore",
+      "firebaseAuthentication"
+    ])
+  },
+  watch: {
+    isInvalidUser: function(newVal) {
+      if (newVal) {
+        this.destroyLoader();
+      }
+    }
+  },
+  created: function() {
+    this.mountLoader();
+    this.initRouterHooks();
+    this.commitFirebaseTools();
+    subscribeUserInfo(this.$store, this.firestore);
+  },
+  destroyed: function() {
+    unsubscribeUserInfo();
+  }
+};
+</script>
+
 <style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
+.fade-in-only-slow-enter-active {
+  transition: opacity 500ms ease-out;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.fade-in-only-slow-enter {
+  opacity: 0;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.fade-in-only-enter-active {
+  transition: opacity 250ms ease-out;
+}
+
+.fade-in-only-enter {
+  opacity: 0;
 }
 </style>
+
