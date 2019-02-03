@@ -7,7 +7,7 @@ class UsersModel {
   }
 
   getCurrentUserId() {
-    return this.db.dbRef.auth().currentUser.uid;
+    return this.db.firebase.auth().currentUser.uid;
   }
 
   // adds names to usersArray

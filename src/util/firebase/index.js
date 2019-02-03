@@ -81,6 +81,7 @@ import UsersModel from "./dbModels/UsersModel";
 class Database {
   constructor(dbRef) {
     this.dbRef = dbRef;
+    this.firebase = firebase;
     this.outings = new OutingsModel(this);
     this.groups = new GroupsModel(this);
     this.users = new UsersModel(this);
