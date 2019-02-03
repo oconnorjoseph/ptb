@@ -89,7 +89,7 @@ class UsersModel {
   async setOuting(outing_id, user_id, status, datetime) {
     this.usersRef
       .doc(user_id) //TODO
-      .collections("outings")
+      .collection("outings")
       .doc(outing_id)
       .set({
         status: status,
