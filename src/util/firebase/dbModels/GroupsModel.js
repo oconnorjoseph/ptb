@@ -32,30 +32,55 @@ class GroupsModel {
     }
   }
 
-  // adds user to pending list for a closed outing, going if open
-  async addUser(outing_id, user_id) {
-    const outing = await this.db.outings.fetch(outing_id);
-    this.db.outings
+  async getUserStatus(outing_id, user_id) {
+    const querySnapshot = await this.outingsRef
       .doc(outing_id)
       .collection("attendees")
-      .add({
-        user_id: user_id,
-        joined: this.db.FieldValue.serverTimestamp(),
-        status: outing.closed ? "pending" : "going"
-      });
+      .where("user_id", "==", user_id)
+      .get();
+    if (querySnapshot.empty) {
+      return "";
+    } else {
+      return querySnapshot.data().status;
+    }
+  }
+
+  // adds user to pending list for a closed outing, going if open
+  async addUser(outing_id, user_id) {
+    const grantedUserStatus = await this.db.outings.canAddUser(
+      outing_id,
+      user_id
+    );
+    if (grantedUserStatus) {
+      this.db.outings
+        .doc(outing_id)
+        .collection("attendees")
+        .add({
+          user_id: user_id,
+          joined: this.db.FieldValue.serverTimestamp(),
+          status: grantedUserStatus
+        });
+    }
   }
 
   // confirms user from pending to going for a closed outing
   async confirmUser(outing_id, user_id) {
-    this.db.outings
-      .doc(outing_id)
-      .collection("attendees")
-      .where("user_id", "==", user_id)
-      .get()
-      .then(querySnapshot => {
-        // assuming single result
-        querySnapshot.docs[0].ref.update({ status: "going" });
-      });
+    const grantedUserStatus = await this.db.outings.canAddUser(
+      outing_id,
+      user_id,
+      true // bypasses closed event
+    );
+    if (grantedUserStatus == "going") {
+      this.db.outings
+        .doc(outing_id)
+        .collection("attendees")
+        .where("user_id", "==", user_id)
+        .get()
+        .then(querySnapshot => {
+          // assuming single result
+          querySnapshot.docs[0].ref.update({ status: "going" });
+        });
+    }
   }
 
   unsubscribeAttendees() {
