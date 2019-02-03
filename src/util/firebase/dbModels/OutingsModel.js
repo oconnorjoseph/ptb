@@ -54,8 +54,8 @@ class OutingsModel {
   subscribeAllOutings(outingsArray) {
     if (!this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber = this.outingsRef
-        .where("deleted", "==", false)
-        .where("available", "==", true)
+        .where("deleted", "===", false)
+        .where("available", "===", true)
         .orderBy("datetime")
         .onSnapshot(querySnapshot => {
           outingsArray.length = 0;
@@ -123,16 +123,15 @@ class OutingsModel {
       this.userOutingData[outing_id] = {};
     }
     const decision = (outing_id) => {
-      console.log(this.userOutingData[outing_id]);
-      if (Object.keys(this.userOutingData[outing_id]).length == 3) {
+      if (Object.keys(this.userOutingData[outing_id]).length === 3) {
         const userStatus = this.userOutingData[outing_id].userStatus;
         const closedOuting = this.userOutingData[outing_id].closedOuting;
         const outingFull = this.userOutingData[outing_id].outingFull;
-        if (userStatus == "going") {
+        if (userStatus === "going") {
           OnSnapshot("GOING");
         } else if (!closedOuting && !outingFull) {
           OnSnapshot("AVAILABLE");
-        } else if (userStatus == "pending") {
+        } else if (userStatus === "pending") {
           if (closedOuting) {
             OnSnapshot("PENDING");
           } else {
@@ -159,12 +158,12 @@ class OutingsModel {
         this.outingsRef
           .doc(outing_id)
           .collection("attendees")
-          .where("user_id", "==", user_id)
+          .where("user_id", "===", user_id)
           .onSnapshot(querySnapshot => {
             if (querySnapshot.empty) {
-              this.userOutingData[outing_id].userStatus == "";
+              this.userOutingData[outing_id].userStatus = "";
             } else {
-              this.userOutingData[outing_id].userStatus ==
+              this.userOutingData[outing_id].userStatus =
                 querySnapshot.data().status;
             }
             decision(outing_id);
