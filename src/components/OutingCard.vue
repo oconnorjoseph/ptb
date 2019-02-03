@@ -114,7 +114,7 @@ export default {
       //
     },
     detatchOutingDetails: function() {
-      // this.db.outings.unsubscribeOuting(this.outing.id);
+      this.db.outings.unsubscribeOuting(this.outing.id);
       this.outingDetails = {};
     },
     attachOutingDetails: function() {

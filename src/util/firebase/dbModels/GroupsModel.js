@@ -2,6 +2,7 @@ class GroupsModel {
   constructor(db) {
     this.db = db;
     this.userStatusUnsubscriber;
+    this.nextPendingUnsubscriber;
     this.attendeesUnsubscriber;
     this.pendingUnsubscriber;
     this.goingUnsubscriber;
@@ -32,6 +33,7 @@ class GroupsModel {
     }
   }
 
+  // returns "" if not going, "pending" if unconfirmed, "going" if confirmed
   async getUserStatus(outing_id, user_id) {
     const querySnapshot = await this.outingsRef
       .doc(outing_id)
@@ -79,6 +81,41 @@ class GroupsModel {
         .then(querySnapshot => {
           // assuming single result
           querySnapshot.docs[0].ref.update({ status: "going" });
+        });
+    }
+  }
+
+  async removeUser(outing)
+
+  // gets the next chronological pending user
+  unsubscribeNextPending() {
+    if (this.nextPendingUnsubscriber) {
+      this.nextPendingUnsubscriber();
+      this.nextPendingUnsubscriber = null;
+    }
+  }
+
+  // nextPendingObj =>
+  //    str: user_id
+  //    timestamp: joined
+  //    str: status="pending"
+  subscribeNextPending(nextPendingObj, outing_id) {
+    if (!this.nextPendingUnsubscriber) {
+      this.nextPendingUnsubscriber = this.outingsRef
+        .doc(outing_id)
+        .collection("attendees")
+        .where("status", "==", "pending")
+        .sortBy("joined")
+        .limit(1)
+        .onSnapshot(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            doc
+              .data()
+              .keys()
+              .forEach(key => {
+                nextPendingObj[key] = doc.data[key];
+              });
+          });
         });
     }
   }
