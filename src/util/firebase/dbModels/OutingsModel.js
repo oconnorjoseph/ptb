@@ -76,7 +76,7 @@ class OutingsModel {
   }
 
   unsubscribeOuting(outing_id) {
-    if (!(outing_id in this.outingUnsubscribers)) {
+    if (outing_id in this.outingUnsubscribers) {
       this.outingUnsubscribers[outing_id]();
       delete this.outingUnsubscribers[outing_id];
     }
