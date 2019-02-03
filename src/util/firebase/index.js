@@ -75,13 +75,13 @@ export { firebaseFunctions };
 
 // database setup
 import OutingsModel from "./dbModels/OutingsModel";
-//import GroupsModel from "./dbModels/UserModel";
+import GroupsModel from "./dbModels/GroupsModel";
 
 class Database {
   constructor(dbRef) {
     this.dbRef = dbRef;
     this.outings = new OutingsModel(this);
-    //this.groups = new GroupsModel(this);
+    this.groups = new GroupsModel(this);
   }
 }
 

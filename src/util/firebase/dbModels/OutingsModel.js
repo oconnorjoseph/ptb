@@ -2,6 +2,8 @@ class OutingsModel {
   constructor(db) {
     this.db = db;
     this.outingsRef = db.dbRef.collection("Outings");
+    this.allOutingsUnsubscriber;
+    this.outingUnsubscriber;
   }
 
   // lifecycle methods
@@ -29,6 +31,11 @@ class OutingsModel {
       deleted: false
     };
     const outingRef = await this.outingsRef.add(outing);
+    outingRef.collection("attendees").add({
+      uid: organizer_id,
+      joined: this.db.FieldValue.serverTimestamp(),
+      role: "going"
+    });
     return outingRef.id;
   }
 
@@ -42,36 +49,49 @@ class OutingsModel {
     this.update(outing_id, { deleted: true });
   }
 
-  // returns all event objects as a list of json objects
-  async subscribeAll(outings) {
-    this.outingsRef.where("deleted", "==", false).onSnapshot(querySnapshot => {
-      outings.length = 0;
-      querySnapshot.forEach(doc => {
-        outings.push(doc.data());
-      });
-    });
-  }
-
   // fetch methods
-
+  unsubscribeAllOutings() {
+    if (this.allOutingsUnsubscriber) {
+      this.allOutingsUnsubscriber();
+      this.allOutingsUnsubscriber = null;
+    }
+  }
   // returns all event objects as a list of json objects
-  async fetchAll() {
-    const snapshot = await this.outingsRef.where("deleted", "==", false).get();
-    var outings = [];
-    snapshot.forEach(doc => {
-      outings.push(doc.data());
-    });
-    return outings;
+  async subscribeAllOutings(outingsArray) {
+    if (!this.allOutingsUnsubscriber) {
+      this.allOutingsUnsubscriber = this.outingsRef
+        .where("deleted", "==", false)
+        .orderBy("datetime")
+        .onSnapshot(querySnapshot => {
+          outingsArray = [];
+          querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const outing = {
+              id: doc.id,
+              title: data.title,
+              datetime: data.datetime
+            };
+            outingsArray.append(outing);
+          });
+        });
+    }
   }
 
-  // returns a single json object for the event-id provided, returns null if not present
-  async fetch(event_id) {
-    const snapshot = await this.outingsRef.doc(event_id).get();
-    if (snapshot.exists) {
-      const outing = snapshot.data();
-      return outing.deleted ? null : outing;
-    } else {
-      return null;
+  unsubscribeOuting() {
+    if (this.outingUnsubscriber) {
+      this.outingUnsubscriber();
+      this.outingUnsubscriber = null;
+    }
+  }
+  // returns all event objects as a list of json objects
+  async subscribeOuting(outingData, outing_id) {
+    if (!this.outingUnsubscriber) {
+      this.outingUnsubscriber = this.outingsRef
+        .doc(outing_id)
+        .onSnapshot(querySnapshot => {
+          outingData = querySnapshot.data();
+          outingData.id = outing_id;
+        });
     }
   }
 
