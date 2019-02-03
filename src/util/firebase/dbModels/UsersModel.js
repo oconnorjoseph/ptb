@@ -126,7 +126,7 @@ class UsersModel {
           outingsSnapshot.forEach((doc, i) => {
             var data = doc.data();
             data.status = statuses[i];
-            outingsArray.push(data);
+            (data.id = doc.id), outingsArray.push(data);
           });
         });
     }
