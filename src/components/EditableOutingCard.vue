@@ -67,7 +67,7 @@ export default {
   name: "EditableOutingCard",
   components: {
     OutingStatus: () => import("./OutingStatus.vue"),
-    VueXeditable: () => import("./")
+    VueXeditable: () => import("")
   },
   props: {
     outing: {
