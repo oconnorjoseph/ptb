@@ -54,8 +54,8 @@ class OutingsModel {
   subscribeAllOutings(outingsArray) {
     if (!this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber = this.outingsRef
-        .where("deleted", "===", false)
-        .where("available", "===", true)
+        .where("deleted", "==", false)
+        .where("available", "==", true)
         .orderBy("datetime")
         .onSnapshot(querySnapshot => {
           outingsArray.length = 0;
@@ -158,7 +158,7 @@ class OutingsModel {
         this.outingsRef
           .doc(outing_id)
           .collection("attendees")
-          .where("user_id", "===", user_id)
+          .where("user_id", "==", user_id)
           .onSnapshot(querySnapshot => {
             if (querySnapshot.empty) {
               this.userOutingData[outing_id].userStatus = "";

@@ -22,7 +22,7 @@ class GroupsModel {
       this.userStatusUnsubscriber = this.outingsRef
         .doc(outing_id)
         .collection("attendees")
-        .where("user_id", "===", user_id)
+        .where("user_id", "==", user_id)
         .onSnapshot(querySnapshot => {
           var status = "";
           if (!querySnapshot.empty) {
@@ -38,7 +38,7 @@ class GroupsModel {
     const querySnapshot = await this.outingsRef
       .doc(outing_id)
       .collection("attendees")
-      .where("user_id", "===", user_id)
+      .where("user_id", "==", user_id)
       .get();
     if (querySnapshot.empty) {
       return "";
@@ -79,7 +79,7 @@ class GroupsModel {
       this.db.outings
         .doc(outing_id)
         .collection("attendees")
-        .where("user_id", "===", user_id)
+        .where("user_id", "==", user_id)
         .get()
         .then(querySnapshot => {
           // assuming single result
@@ -109,7 +109,7 @@ class GroupsModel {
       this.nextPendingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .collection("attendees")
-        .where("status", "===", "pending")
+        .where("status", "==", "pending")
         .sortBy("joined")
         .limit(1)
         .onSnapshot(querySnapshot => {
@@ -164,7 +164,7 @@ class GroupsModel {
       this.pendingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .collection("attendees")
-        .where("status", "===", "pending")
+        .where("status", "==", "pending")
         .onSnapshot(querySnapshot => {
           pendingArray.length = 0;
           querySnapshot.forEach(doc => {
@@ -191,7 +191,7 @@ class GroupsModel {
       this.goingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .collection("attendees")
-        .where("status", "===", "going")
+        .where("status", "==", "going")
         .onSnapshot(querySnapshot => {
           goingArray.length = 0;
           querySnapshot.forEach(doc => {
