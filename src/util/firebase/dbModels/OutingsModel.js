@@ -32,7 +32,7 @@ class OutingsModel {
     };
     const outingRef = await this.outingsRef.add(outing);
     outingRef.collection("attendees").add({
-      uid: organizer_id,
+      user_id: this.db.users.getCurrentUserId(),
       joined: this.db.FieldValue.serverTimestamp(),
       status: "going"
     });
