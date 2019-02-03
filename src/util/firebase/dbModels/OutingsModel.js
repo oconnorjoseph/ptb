@@ -24,7 +24,7 @@ class OutingsModel {
     const outingRef = this.outingsRef.add(outing);
     outingRef.collection("attendees").add({
       user_id: this.db.users.getCurrentUserId(),
-      joined: Firebase.ServerValue.TIMESTAMP,
+      joined: firebase.SesrverValue.TIMESTAMP,
       status: "going"
     });
     this.db.users.makeOuting(outingRef.id, undefined);
