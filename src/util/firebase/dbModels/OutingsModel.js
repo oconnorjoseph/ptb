@@ -83,7 +83,7 @@ class OutingsModel {
         this.db.users.setOuting(
           doc.id,
           attendee.data().user_id,
-          doc.data().status,
+          attendee.data().status,
           doc.data().datetime
         );
       });
