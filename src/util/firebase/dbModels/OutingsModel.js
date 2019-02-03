@@ -3,7 +3,7 @@ class OutingsModel {
     this.db = db;
     this.outingsRef = db.dbRef.collection("outings");
     this.allOutingsUnsubscriber;
-    this.outingUnsubscriber;
+    this.outingUnsubscribers = {};
   }
 
   // creates outing, returns id of created outing
@@ -75,17 +75,17 @@ class OutingsModel {
     }
   }
 
-  unsubscribeOuting() {
-    if (this.outingUnsubscriber) {
-      this.outingUnsubscriber();
-      this.outingUnsubscriber = null;
+  unsubscribeOuting(outing_id) {
+    if (!(outing_id in this.outingUnsubscribers)) {
+      this.outingUnsubscribers[outing_id]();
+      delete this.outingUnsubscribers[outing_id];
     }
   }
 
   // returns all event objects as a list of json objects
   subscribeOuting(outingObj, outing_id) {
-    if (!this.outingUnsubscriber) {
-      this.outingUnsubscriber = this.outingsRef
+    if (!this.outingUnsubscriber[outing_id]) {
+      this.outingUnsubscribers[outing_id] = this.outingsRef
         .doc(outing_id)
         .onSnapshot(querySnapshot => {
           const data = querySnapshot.data();
