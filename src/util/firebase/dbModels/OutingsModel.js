@@ -55,6 +55,7 @@ class OutingsModel {
     if (!this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber = this.outingsRef
         .where("deleted", "==", false)
+        .where("available", "==", true)
         .orderBy("datetime")
         .onSnapshot(querySnapshot => {
           outingsArray.length = 0;
@@ -69,6 +70,25 @@ class OutingsModel {
           });
         });
     }
+  }
+
+  async updateAllOutings() {
+    const querySnapshot = await this.outingsRef
+      .where("deleted", "==", false)
+      .where("available", "==", true)
+      .get();
+    querySnapshot.forEach(async doc => {
+      this.db.users.makeOuting(doc.id, doc.data().datetime);
+      const attendees = await this.outingsRef.collection("attendees").get();
+      attendees.forEach(doc => {
+        this.db.users.setOuting(
+          doc.id,
+          doc.data().user_id,
+          doc.data().status,
+          doc.data().datetime
+        );
+      });
+    });
   }
 
   unsubscribeOuting(outing_id) {
