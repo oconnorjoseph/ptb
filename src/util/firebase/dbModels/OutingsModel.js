@@ -63,7 +63,7 @@ class OutingsModel {
         .where("deleted", "==", false)
         .orderBy("datetime")
         .onSnapshot(querySnapshot => {
-          outingsArray = [];
+          outingsArray.length = 0;
           querySnapshot.forEach(doc => {
             const data = doc.data();
             const outing = {
@@ -71,7 +71,7 @@ class OutingsModel {
               title: data.title,
               datetime: data.datetime
             };
-            outingsArray.append(outing);
+            outingsArray.push(outing);
           });
         });
     }

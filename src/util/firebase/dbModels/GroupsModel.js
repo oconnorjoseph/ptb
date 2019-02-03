@@ -63,9 +63,9 @@ class GroupsModel {
         .doc(outing_id)
         .collection("attendees")
         .onSnapshot(querySnapshot => {
-          attendeesArray = [];
+          attendeesArray.length = 0;
           querySnapshot.forEach(doc => {
-            attendeesArray.append(doc.data());
+            attendeesArray.push(doc.data());
           });
         });
     }
@@ -90,9 +90,9 @@ class GroupsModel {
         .collection("attendees")
         .where("status", "==", "pending")
         .onSnapshot(querySnapshot => {
-          pendingArray = [];
+          pendingArray.length = 0;
           querySnapshot.forEach(doc => {
-            pendingArray.append(doc.data());
+            pendingArray.push(doc.data());
           });
         });
     }
@@ -117,9 +117,9 @@ class GroupsModel {
         .collection("attendees")
         .where("status", "==", "going")
         .onSnapshot(querySnapshot => {
-          goingArray = [];
+          goingArray.length = 0;
           querySnapshot.forEach(doc => {
-            goingArray.append(doc.data());
+            goingArray.push(doc.data());
           });
         });
     }

@@ -98,7 +98,6 @@ export default {
     this.initRouterHooks();
     this.commitFirebaseTools();
     subscribeUserInfo(this.$store, this.firestore);
-    this.db.outings.fetchAll().then(all => console.log(all));
   },
   destroyed: function() {
     unsubscribeUserInfo();
