@@ -5,7 +5,8 @@
         <template v-for="outing in outings">
           <div class="row py-2" :key="outing.id">
             <div class="col">
-              <outing-card :outing="outing" :db="db" :outing-id="outing.id"/>
+              <editable-outing-card v-if="editable" :outing="outing" :db="db" :outing-id="outing.id"/>
+              <outing-card v-else :outing="outing" :db="db" :outing-id="outing.id"/>
             </div>
           </div>
         </template>
@@ -18,12 +19,17 @@
 export default {
   name: "OutingsList",
   components: {
-    OutingCard: () => import("./OutingCard.vue")
+    OutingCard: () => import("./OutingCard.vue"),
+    EditableOutingCard: () => import("./EditableOutingCard.vue")
   },
   props: {
     outings: {
       type: Array,
       required: false
+    },
+    editable: {
+      type: Boolean,
+      default: false
     },
     db: {
       type: Object,
