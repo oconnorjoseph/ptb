@@ -3,19 +3,34 @@
     <ul slot="navbar-nav" class="navbar-nav">
       <!-- Link to Dashboard 'page' -->
       <li class="nav-item">
-        <button type="button" class="btn btn-secondary m-1" @click="$router.push(dashboardPath)">
-          <span class="text-nowrap">Dashboard</span>
+        <button
+          type="button"
+          class="btn m-1"
+          :class="[isAtDashboard ? 'btn-secondary' : 'btn-primary']"
+          @click="$router.push(dashboardPath)"
+        >
+          <span class="text-nowrap">Home</span>
         </button>
       </li>
       <!-- Link to CreateOutings 'page' -->
       <li class="nav-item">
-        <button type="button" class="btn btn-secondary m-1" @click="$router.push(createOutingsPath)">
+        <button
+          type="button"
+          class="btn m-1"
+          :class="[isAtCreateOutings ? 'btn-secondary' : 'btn-primary']"
+          @click="$router.push(createOutingsPath)"
+        >
           <span class="text-nowrap">Create Outing</span>
         </button>
       </li>
       <!-- Link to MyOutings 'page' -->
       <li class="nav-item">
-        <button type="button" class="btn btn-secondary m-1" @click="$router.push(myOutingsPath)">
+        <button
+          type="button"
+          class="btn m-1"
+          :class="[isAtMyOutings ? 'btn-secondary' : 'btn-primary']"
+          @click="$router.push(myOutingsPath)"
+        >
           <span class="text-nowrap">My Outings</span>
         </button>
       </li>
@@ -53,7 +68,19 @@ export default {
   },
   computed: {
     currentPath: function() {
-      return this.$router.currentRoute;
+      return this.$route;
+    },
+    isAtDashboard: function() {
+      const path = this.$route.path;
+      return !path || path === this.dashboardPath;
+    },
+    isAtCreateOutings: function() {
+      const path = this.$route.path;
+      return path && path === this.createOutingsPath;
+    },
+    isAtMyOutings: function() {
+      const path = this.$route.path;
+      return path && path === this.myOutingsPath;
     }
   }
 };

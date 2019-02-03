@@ -86,7 +86,7 @@ class GroupsModel {
   }
 
   async removeUser(outing_id, user_id) {
-    continue;
+    //
   }
 
   // gets the next chronological pending user

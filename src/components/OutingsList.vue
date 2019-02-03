@@ -5,7 +5,7 @@
         <template v-for="outing in outings">
           <div class="row py-2" :key="outing.id">
             <div class="col">
-              <outing-card :outing="outing"/>
+              <outing-card :outing="outing" :db="db"/>
             </div>
           </div>
         </template>
@@ -22,14 +22,12 @@ export default {
   components: {
     OutingCard: () => import("./OutingCard.vue")
   },
-  data: function() {
-    return {
-      outings: []
-    };
+  props: {
+    outings: {
+      type: Array,
+      required: false
+    }
   },
-  computed: mapState(["db"]),
-  created: function() {
-    this.db.outings.subscribeAllOutings(this.outings);
-  }
+  computed: mapState(["db"])
 };
 </script>

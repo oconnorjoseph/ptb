@@ -8,7 +8,7 @@
       </div>
       <div class="row p-2">
         <div class="col">
-          <h1 id="title" class="display-4">A I R</h1>
+          <h1 id="title" class="display-4">Pop The Bubble</h1>
         </div>
       </div>
     </div>
