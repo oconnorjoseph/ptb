@@ -122,7 +122,7 @@ class OutingsModel {
     if (!this.userOutingData[outing_id]) {
       this.userOutingData[outing_id] = {};
     }
-    const decision = function(outing_id) {
+    const decision = (outing_id) => {
       if (Object.keys(this.userOutingData[outing_id]).length == 3) {
         const userStatus = this.userOutingData[outing_id].userStatus;
         const closedOuting = this.userOutingData[outing_id].closedOuting;

@@ -80,7 +80,8 @@ export default {
     onWaitlistBtnClicked: function() {
       db.groups.addCurrentUser(this.outingId);
     },
-    onSnapshot: function(userOutingStatus) {
+    onSnapshot: (userOutingStatus) => {
+      console.log(userOutingStatus);
       this.userOutingStatus = userOutingStatus;
     }
   },
