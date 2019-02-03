@@ -63,7 +63,7 @@ class GroupsModel {
         .collection("attendees")
         .add({
           user_id: user_id,
-          joined: firebase.ServerValue.TIMESTAMP,
+          joined: firebase.database.ServerValue.TIMESTAMP,
           status: grantedUserStatus
         });
 
