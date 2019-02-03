@@ -48,12 +48,12 @@ class GroupsModel {
   }
 
   // adds user to pending list for a closed outing, going if open
-  async addUser(outing_id, user_id) {
+  async addUser(outing_id) {
+    const user_id = this.db.users.getCurrentUserId();
     const grantedUserStatus = await this.db.outings.canAddUser(
       outing_id,
       user_id,
-      false,
-      true
+      false
     );
     if (grantedUserStatus) {
       this.db.outings
@@ -64,6 +64,7 @@ class GroupsModel {
           joined: this.db.FieldValue.serverTimestamp(),
           status: grantedUserStatus
         });
+        
     }
   }
 
@@ -72,8 +73,7 @@ class GroupsModel {
     const grantedUserStatus = await this.db.outings.canAddUser(
       outing_id,
       user_id,
-      true, // bypasses closed event
-      true
+      true // bypasses closed event
     );
     if (grantedUserStatus == "going") {
       this.db.outings
