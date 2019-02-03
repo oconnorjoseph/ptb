@@ -70,7 +70,6 @@ class OutingsModel {
               title: data.title,
               datetime: data.datetime
             };
-            console.log(outing);
             outingsArray.push(outing);
           });
         });
@@ -91,14 +90,15 @@ class OutingsModel {
       this.outingUnsubscriber = this.outingsRef
         .doc(outing_id)
         .onSnapshot(querySnapshot => {
-          outingObj = querySnapshot.data();
+          const data = querySnapshot.data();
+          outingObj.desc = data.desc;
           outingObj.id = outing_id;
         });
     }
   }
 
   // returns the max status a user is allowed for an event
-  async canAddUser(outing_id, user_id, allowed=false) {
+  async canAddUser(outing_id, user_id, allowed = false) {
     const querySnapshot = await this.outingsRef.doc(outing_id).get();
     const outingFull = querySnapshot.data().max_people >= querySnapshot.data().going_count;
     const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
