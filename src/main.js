@@ -6,8 +6,6 @@ import "./registerServiceWorker.js";
 
 Vue.config.productionTip = false;
 
-// jquery
-window.jQuery = require("jquery");
 // Bootstrap
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./assets/css/bootstrap.min.css";

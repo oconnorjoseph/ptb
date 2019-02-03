@@ -1,3 +1,6 @@
+// jquery
+window.jQuery = require("jquery");
+
 /*! X-editable - v1.5.1 
 * In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
 * http://github.com/vitalets/x-editable
