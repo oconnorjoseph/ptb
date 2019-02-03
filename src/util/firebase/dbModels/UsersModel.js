@@ -119,7 +119,7 @@ class UsersModel {
           var promises = [];
           var statuses = [];
           querySnapshot.forEach(doc => {
-            promises.push(this.db.outings.doc(doc.id).get());
+            promises.push(this.db.outings.outingsRef.doc(doc.id).get());
             statuses.push(doc.data().status);
           });
           const outingsSnapshot = await Promise.all(promises);
