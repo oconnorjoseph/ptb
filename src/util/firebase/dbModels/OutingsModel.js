@@ -26,6 +26,7 @@ class OutingsModel {
       min_people: min_people,
       max_people: max_people,
       closed: closed,
+      going_count: 1,
       deleted: false
     };
     const outingRef = await this.outingsRef.add(outing);
@@ -47,7 +48,7 @@ class OutingsModel {
     this.update(outing_id, { deleted: true });
   }
 
-  // fetch methods
+
   unsubscribeAllOutings() {
     if (this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber();
@@ -76,12 +77,14 @@ class OutingsModel {
     }
   }
 
+
   unsubscribeOuting() {
     if (this.outingUnsubscriber) {
       this.outingUnsubscriber();
       this.outingUnsubscriber = null;
     }
   }
+
   // returns all event objects as a list of json objects
   async subscribeOuting(outingObj, outing_id) {
     if (!this.outingUnsubscriber) {
@@ -91,6 +94,24 @@ class OutingsModel {
           outingObj = querySnapshot.data();
           outingObj.id = outing_id;
         });
+    }
+  }
+
+  // returns the max status a user is allowed for an event
+  async canAddUser(outing_id, user_id, allowed=false) {
+    const querySnapshot = await this.outingsRef.doc(outing_id).get();
+    const outingFull = querySnapshot.data().max_people >= querySnapshot.data().going_count;
+    const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
+    const closedOuting = querySnapshot.data().closed;
+    if ((!closedOuting || allowed) && userStatus != "going" && !outingFull) {
+      this.outingsRef.doc(outing_id).update({
+        going_count: querySnapshot.data().going_count + 1
+      });
+      return "going";
+    } else if (!userStatus) {
+      return "pending";
+    } else {
+      return "";
     }
   }
 }
