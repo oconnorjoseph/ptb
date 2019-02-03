@@ -9,6 +9,11 @@
         />
         <div class="container-fluid" v-if="isReady">
           <div class="row">
+            <div class="col px-0">
+              <the-navigation-bar />
+            </div>
+          </div>
+          <div class="row">
             <div class="col">
               <transition name="fade-in-only">
                 <router-view/>
@@ -38,7 +43,8 @@ import {
 export default {
   name: "app",
   components: {
-    TheAuthentication: () => import("./views/TheAuthentication.vue")
+    TheAuthentication: () => import("./views/TheAuthentication.vue"),
+    TheNavigationBar: () => import("./components/TheNavigationBar.vue")
   },
   mixins: [loader],
   methods: {
