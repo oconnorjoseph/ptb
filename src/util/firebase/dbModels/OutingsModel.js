@@ -9,39 +9,34 @@ class OutingsModel {
   }
 
   // creates outing, returns id of created outing
-  async create(
-    outing_title,
-    location,
-    datetime,
-    desc,
-    min_people = 2,
-    max_people = 2,
-    closed = false
-  ) {
+  async create() {
     const outing = {
       organizer_id: this.db.users.getCurrentUserId(),
-      title: outing_title,
-      location: location,
-      datetime: datetime,
-      desc: desc,
-      min_people: min_people,
-      max_people: max_people,
-      closed: closed,
-      going_count: 1,
-      deleted: false
+      min_people: 2,
+      max_people: 2,
+      closed: false,
+      deleted: false,
+      available: false,
+      going_count: 1
     };
-    const outingRef = await this.outingsRef.add(outing);
+    const outingRef = this.outingsRef.add(outing);
     outingRef.collection("attendees").add({
       user_id: this.db.users.getCurrentUserId(),
       joined: this.db.FieldValue.serverTimestamp(),
       status: "going"
     });
-    return outingRef.id;
+    this.db.users.makeOuting(outingRef.id, undefined);
   }
 
   // updates the outing identified by outing_id with the values in the new_values dictionary
   async update(outing_id, new_values) {
     this.outingsRef.doc(outing_id).update(new_values);
+    const snapshot = await this.outingsRef.doc(outing_id).get();
+    var available = true;
+    ["outing_title", "location", "datetime", "desc"].forEach(item => {
+      available = available && item in snapshot.data();
+    });
+    this.outingsRef.doc(outing_id).update({ available: available });
   }
 
   // lazy deletion of outings object
@@ -110,7 +105,8 @@ class OutingsModel {
     const decision = function(outing_id) {
       if (Object.keys(this.userOutingUnsubscribers[outing_id]).length == 3) {
         const userStatus = this.userOutingUnsubscribers[outing_id].userStatus;
-        const closedOuting = this.userOutingUnsubscribers[outing_id].closedOuting;
+        const closedOuting = this.userOutingUnsubscribers[outing_id]
+          .closedOuting;
         const outingFull = this.userOutingUnsubscribers[outing_id].outingFull;
         if (userStatus == "going") {
           OnSnapshot("GOING");
