@@ -15,7 +15,7 @@ class UsersModel {
     const querySnapshot = await this.db.usersRef.get();
     for (var i = 0; i < usersArray.length; i++) {
       const name_data = querySnapshot.docs().find(doc => {
-        doc.id == usersArray[i].id;
+        doc.id === usersArray[i].id;
       });
       usersArray[i].firstName = name_data.firstName;
       usersArray[i].lastName = name_data.lastName;
