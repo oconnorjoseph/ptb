@@ -51,7 +51,9 @@ class GroupsModel {
   async addUser(outing_id, user_id) {
     const grantedUserStatus = await this.db.outings.canAddUser(
       outing_id,
-      user_id
+      user_id,
+      false,
+      true
     );
     if (grantedUserStatus) {
       this.db.outings
@@ -70,7 +72,8 @@ class GroupsModel {
     const grantedUserStatus = await this.db.outings.canAddUser(
       outing_id,
       user_id,
-      true // bypasses closed event
+      true, // bypasses closed event
+      true
     );
     if (grantedUserStatus == "going") {
       this.db.outings

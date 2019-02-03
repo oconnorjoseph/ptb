@@ -95,16 +95,18 @@ class OutingsModel {
   }
 
   // returns the max status a user is allowed for an event
-  async canAddUser(outing_id, user_id, allowed = false) {
+  async canAddUser(outing_id, user_id, allowed = false, final = false) {
     const querySnapshot = await this.outingsRef.doc(outing_id).get();
     const outingFull =
       querySnapshot.data().max_people >= querySnapshot.data().going_count;
     const userStatus = await this.db.groups.getUserStatus(outing_id, user_id);
     const closedOuting = querySnapshot.data().closed;
     if ((!closedOuting || allowed) && userStatus != "going" && !outingFull) {
-      this.outingsRef.doc(outing_id).update({
-        going_count: querySnapshot.data().going_count + 1
-      });
+      if (final) {
+        this.outingsRef.doc(outing_id).update({
+          going_count: querySnapshot.data().going_count + 1
+        });
+      }
       return "going";
     } else if (!userStatus) {
       return "pending";
