@@ -52,6 +52,7 @@
 </template>
 
 <script>
+
 const SCORE_STR = "Score";
 
 const FORMATTED_DATE_OPTIONS = {
@@ -65,7 +66,8 @@ const FORMATTED_DATE_OPTIONS = {
 export default {
   name: "EditableOutingCard",
   components: {
-    OutingStatus: () => import("./OutingStatus.vue")
+    OutingStatus: () => import("./OutingStatus.vue"),
+    VueXeditable: () => import("./")
   },
   props: {
     outing: {
