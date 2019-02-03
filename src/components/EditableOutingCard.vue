@@ -3,6 +3,7 @@
     <div class="card-header" @click="isShowingDetails = !isShowingDetails">
       <div class="row">
         <div class="col align-self-center">
+            <a href="#" data-type="text" data-title="Enter event name:">{{outing.title}}</a>
           <h4 class="card-title mb-0 text-left">{{outing.title}}</h4>
         </div>
         <div class="col align-self-center">
@@ -62,7 +63,7 @@ const FORMATTED_DATE_OPTIONS = {
 };
 
 export default {
-  name: "OutingCard",
+  name: "EditableOutingCard",
   components: {
     OutingStatus: () => import("./OutingStatus.vue")
   },

@@ -9,6 +9,8 @@ Vue.config.productionTip = false;
 // Bootstrap
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./assets/css/bootstrap.min.css";
+// Bootstrap-Editable
+import "bootstrap-editable";
 // Font-Awesome
 import "font-awesome/css/font-awesome.css";
 // Vue-Loading-Overlay-Plugin

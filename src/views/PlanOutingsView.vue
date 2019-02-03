@@ -2,7 +2,7 @@
   <div :id="this.$options.name">
     <div class="row">
       <div class="col">
-        <outings-list :outings="myOutings" :db="db"/>
+        <outings-list :outings="editableOutings" :db="db"/>
       </div>
     </div>
   </div>
@@ -12,22 +12,21 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "DashboardView",
+  name: "PlanOutingsView",
   components: {
     OutingsList: () => import("./../components/OutingsList.vue")
   },
   data: function() {
     return {
-      myOutings: []
+      editableOutings: []
     };
   },
   computed: mapState(["db"]),
   created: function() {
-    //TODO: this.db.outings.subscribeCurrentUserOutings(this.myOutings);
+    //TODO: this.db.outings.subscribePlannedOutings(this.myOutings);
   },
   destroyed: function() {
-    //TODO: this.db.outings.unsubscribeCurrentUserOutings();
+    //TODO: this.db.outings.unsubscribePlannedOutings();
   }
 };
 </script>
-

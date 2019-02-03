@@ -9,7 +9,9 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "boostrap": "^2.0.0",
     "bootstrap": "^4.2.1",
+    "bootstrap-editable": "^1.0.1",
     "firebase": "^5.8.2",
     "firebaseui": "^3.5.2",
     "font-awesome": "^4.7.0",
@@ -35,6 +37,7 @@
     "eslint": "^5.8.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "webpack-cli": "^3.2.1"
   }
 }

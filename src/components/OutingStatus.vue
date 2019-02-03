@@ -1,11 +1,6 @@
 <template>
   <div :id="this.$options.name" v-if="userOutingStatus !== null">
-    <button
-      v-if="isAvailable"
-      type="button"
-      class="btn btn-success"
-      @click="onGoBtnClicked()"
-    >
+    <button v-if="isAvailable" type="button" class="btn btn-success" @click="onGoBtnClicked()">
       <span style="font-size: 16px;">
         <i class="fa fa-plus text-white mr-2"/>Let's Go!
       </span>
@@ -58,7 +53,7 @@ export default {
   },
   data: function() {
     return {
-      userOutingStatus: WAITLIST_AVAILABLE
+      userOutingStatus: GOING
     };
   },
   computed: {
@@ -77,13 +72,16 @@ export default {
   },
   methods: {
     onGoBtnClicked: function() {
-        // TODO: 
+      // TODO:
+      // db.groups.addCurrentUser(outing_id);
     },
     onCancelBtnClicked: function() {
-        // TODO: 
+      // TODO:
+      // db.groups.removeCurrentUser(outing_id);
     },
     onWaitlistBtnClicked: function() {
-        // TODO: 
+      // TODO:
+      // db.groups.addCurrentUser(outing_id);
     },
     onSnapshot: function(userOutingStatus) {
       this.userOutingStatus = userOutingStatus;
@@ -91,6 +89,9 @@ export default {
   },
   created: function() {
     //TODO: this.db.outings.subscribeUserOutingStatus(this.outingId, this.onSnapshot);
+  },
+  destroyed: function() {
+    //TODO: this.db.outings.unsubscribeUserOutingStatus(this.outingId);
   }
 };
 </script>

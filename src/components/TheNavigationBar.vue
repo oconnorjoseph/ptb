@@ -12,15 +12,15 @@
           <span class="text-nowrap">Home</span>
         </button>
       </li>
-      <!-- Link to CreateOutings 'page' -->
+      <!-- Link to PlanOutings 'page' -->
       <li class="nav-item">
         <button
           type="button"
           class="btn m-1"
-          :class="[isAtCreateOutings ? 'btn-secondary' : 'btn-primary']"
-          @click="$router.push(createOutingsPath)"
+          :class="[isAtPlanOutings ? 'btn-secondary' : 'btn-primary']"
+          @click="$router.push(planOutingsPath)"
         >
-          <span class="text-nowrap">Create Outing</span>
+          <span class="text-nowrap">Plan Outings</span>
         </button>
       </li>
       <!-- Link to MyOutings 'page' -->
@@ -48,7 +48,7 @@
 import { mapState } from "vuex";
 import {
   SETTINGS_PATH,
-  CREATE_OUTINGS_PATH,
+  PLAN_OUTINGS_PATH,
   MY_OUTINGS_PATH,
   DASHBOARD_PATH
 } from "./../router/paths.js";
@@ -62,7 +62,7 @@ export default {
     return {
       dashboardPath: DASHBOARD_PATH,
       settingsPath: SETTINGS_PATH,
-      createOutingsPath: CREATE_OUTINGS_PATH,
+      planOutingsPath: PLAN_OUTINGS_PATH,
       myOutingsPath: MY_OUTINGS_PATH
     };
   },
@@ -74,9 +74,9 @@ export default {
       const path = this.$route.path;
       return !path || path === this.dashboardPath;
     },
-    isAtCreateOutings: function() {
+    isAtPlanOutings: function() {
       const path = this.$route.path;
-      return path && path === this.createOutingsPath;
+      return path && path === this.PlanOutingsPath;
     },
     isAtMyOutings: function() {
       const path = this.$route.path;
