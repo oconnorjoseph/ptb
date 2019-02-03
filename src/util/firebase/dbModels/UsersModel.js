@@ -46,7 +46,7 @@ class UsersModel {
 
   async makeOuting(outing_id, datetime) {
     const user_id = this.getCurrentUserId();
-    this.db.usersRef
+    this.usersRef
       .doc(user_id)
       .collections("myOutings")
       .doc(outing_id)
