@@ -2,10 +2,7 @@
   <div :id="this.$options.name">
     <div class="row">
       <div class="col">
-        
-      </div>
-      <div class="col">
-
+        <outings-list />
       </div>
     </div>
   </div>
@@ -15,7 +12,7 @@
 export default {
   name: "DashboardView",
   components: {
-    //EventList: () => import("./../components/EventsList.vue")
+    OutingsList: () => import("./../components/OutingsList.vue")
   }
 };
 </script>

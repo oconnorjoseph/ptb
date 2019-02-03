@@ -39,7 +39,17 @@ class OutingsModel {
 
   // lazy deletion of outings object
   async delete(outing_id) {
-    this.update(outing_id, {deleted: true});
+    this.update(outing_id, { deleted: true });
+  }
+
+  // returns all event objects as a list of json objects
+  async subscribeAll(outings) {
+    this.outingsRef.where("deleted", "==", false).onSnapshot(querySnapshot => {
+      outings.length = 0;
+      querySnapshot.forEach(doc => {
+        outings.push(doc.data());
+      });
+    });
   }
 
   // fetch methods
