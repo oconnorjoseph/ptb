@@ -1,60 +1,96 @@
 <template>
-  <div :id="this.$options.name">
+  <div :id="this.$options.name" v-if="userOutingStatus !== null">
     <button
-      v-if="false"
+      v-if="isAvailable"
       type="button"
-      class="btn btn-primary float-right"
+      class="btn btn-success"
       @click="onGoBtnClicked()"
     >
       <span style="font-size: 16px;">
         <i class="fa fa-plus text-white mr-2"/>Let's Go!
       </span>
     </button>
-    <button v-if="true" class="btn btn-success disabled disabled-light pr-3 float-right">
-      <span style="font-size: 16px;">
-        <i class="fa fa-check text-white mr-2"/>Going
-      </span>
-    </button>
     <button
-      v-if="true"
+      v-else-if="isGoing"
       type="button"
-      class="btn btn-warning disabled disabled-light px-3 float-right"
-    >
-      <span style="font-size: 16px;">Pending...</span>
-    </button>
-    <button
-      v-if="true"
-      type="button"
-      class="btn btn-danger pr-3 float-right"
+      class="btn btn-danger pr-3"
       @click="onCancelBtnClicked()"
     >
       <span style="font-size: 16px;">
         <i class="fa fa-times text-white mr-2"/>Cancel
       </span>
     </button>
+    <button
+      v-else-if="isPending"
+      type="button"
+      class="btn btn-warning disabled disabled-light px-3"
+    >
+      <span style="font-size: 16px;">Pending...</span>
+    </button>
+    <button
+      v-else-if="isWaitlistAvailable"
+      type="button"
+      class="btn btn-warning px-3"
+      @click="onWaitlistBtnClicked()"
+    >
+      <span style="font-size: 16px;">Join Waitlist</span>
+    </button>
   </div>
 </template>
 
 <script>
+const AVAILABLE = "AVAILABLE";
+const GOING = "GOING";
+const PENDING = "PENDING";
+const WAITLIST_AVAILABLE = "WAITLIST_AVAILABLE";
+
 export default {
   name: "OutingStatus",
   props: {
     db: {
       type: Object,
       required: true
+    },
+    outingId: {
+      type: String,
+      required: true
     }
   },
   data: function() {
     return {
-        canAddUser: ""
+      userOutingStatus: WAITLIST_AVAILABLE
     };
   },
+  computed: {
+    isAvailable: function() {
+      return this.userOutingStatus === AVAILABLE;
+    },
+    isGoing: function() {
+      return this.userOutingStatus === GOING;
+    },
+    isPending: function() {
+      return this.userOutingStatus === PENDING;
+    },
+    isWaitlistAvailable: function() {
+      return this.userOutingStatus === WAITLIST_AVAILABLE;
+    }
+  },
   methods: {
-    onGoBtnClicked: function() {},
-    onCancelBtnClicked: function() {}
+    onGoBtnClicked: function() {
+        // TODO: 
+    },
+    onCancelBtnClicked: function() {
+        // TODO: 
+    },
+    onWaitlistBtnClicked: function() {
+        // TODO: 
+    },
+    onSnapshot: function(userOutingStatus) {
+      this.userOutingStatus = userOutingStatus;
+    }
   },
   created: function() {
-    this.db.outings.canAddUser();
+    //TODO: this.db.outings.subscribeUserOutingStatus(this.outingId, this.onSnapshot);
   }
 };
 </script>
@@ -65,10 +101,6 @@ export default {
   opacity: 1;
 }
 .btn-warning:focus,
-.disabled-light {
-  box-shadow: none;
-}
-.btn-success:focus,
 .disabled-light {
   box-shadow: none;
 }

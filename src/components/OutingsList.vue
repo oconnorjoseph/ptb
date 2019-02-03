@@ -5,7 +5,7 @@
         <template v-for="outing in outings">
           <div class="row py-2" :key="outing.id">
             <div class="col">
-              <outing-card :outing="outing" :db="db"/>
+              <outing-card :outing="outing" :db="db" :outing-id="outing.id"/>
             </div>
           </div>
         </template>
