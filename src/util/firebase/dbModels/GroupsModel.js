@@ -86,7 +86,7 @@ class GroupsModel {
   }
 
   //async removeUser(outing_id, user_id) {
-    //
+  //
   //}
 
   // gets the next chronological pending user
@@ -111,12 +111,9 @@ class GroupsModel {
         .limit(1)
         .onSnapshot(querySnapshot => {
           querySnapshot.forEach(doc => {
-            doc
-              .data()
-              .keys()
-              .forEach(key => {
-                nextPendingObj[key] = doc.data[key];
-              });
+            Object.keys(doc.data()).forEach(key => {
+              nextPendingObj[key] = doc.data[key];
+            });
           });
         });
     }
@@ -143,6 +140,7 @@ class GroupsModel {
           querySnapshot.forEach(doc => {
             attendeesArray.push(doc.data());
           });
+          this.db.users.augmentNamesArray(attendeesArray, true);
         });
     }
   }
@@ -169,6 +167,7 @@ class GroupsModel {
           querySnapshot.forEach(doc => {
             pendingArray.push(doc.data());
           });
+          this.db.users.augmentNamesArray(pendingArray);
         });
     }
   }
@@ -195,6 +194,7 @@ class GroupsModel {
           querySnapshot.forEach(doc => {
             goingArray.push(doc.data());
           });
+          this.db.users.augmentNamesArray(goingArray, true);
         });
     }
   }

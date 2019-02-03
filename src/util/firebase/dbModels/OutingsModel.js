@@ -84,7 +84,7 @@ class OutingsModel {
 
   // returns all event objects as a list of json objects
   subscribeOuting(outingObj, outing_id) {
-    if (outing_id in this.outingUnsubscriber) {
+    if (outing_id in this.outingUnsubscribers) {
       this.outingUnsubscribers[outing_id] = this.outingsRef
         .doc(outing_id)
         .onSnapshot(querySnapshot => {
