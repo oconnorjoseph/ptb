@@ -78,7 +78,7 @@ class GroupsModel {
       true // bypasses closed event
     );
     if (grantedUserStatus === "going") {
-      this.db.outings
+      this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .where("user_id", "==", user_id)
