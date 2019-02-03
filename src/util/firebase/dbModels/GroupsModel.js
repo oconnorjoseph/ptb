@@ -1,3 +1,5 @@
+import { PassThrough } from "stream";
+
 class GroupsModel {
   constructor(db) {
     this.db = db;
@@ -85,7 +87,9 @@ class GroupsModel {
     }
   }
 
-  async removeUser(outing)
+  async removeUser(outing_id, user_id) {
+    continue;
+  }
 
   // gets the next chronological pending user
   unsubscribeNextPending() {
