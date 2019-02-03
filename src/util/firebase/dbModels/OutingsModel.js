@@ -1,7 +1,7 @@
 class OutingsModel {
   constructor(db) {
     this.db = db;
-    this.outingsRef = db.dbRef.collection("Outings");
+    this.outingsRef = db.dbRef.collection("outings");
     this.allOutingsUnsubscriber;
     this.outingUnsubscriber;
   }
@@ -69,6 +69,7 @@ class OutingsModel {
               title: data.title,
               datetime: data.datetime
             };
+            console.log(outing);
             outingsArray.push(outing);
           });
         });

@@ -3,15 +3,15 @@
     <div class="card-header" @click="isExpanded = !isExpanded">
       <div class="row">
         <div class="col align-self-center">
-          <h4 class="card-title mb-0 text-left">{{outing.name}}</h4>
+          <h4 class="card-title mb-0 text-left">{{outing.title}}</h4>
         </div>
         <div class="col align-self-center">
-          <h4 class="card-title mb-0 text-right">{{outing.date}}</h4>
+          <h5 class="card-title mb-0 text-right">{{formattedDate}}</h5>
         </div>
         <div class="col align-self-center" style="max-width: 16px;">
           <span class="float-right" style="font-size: 16px;">
             <i class="fa fa-window-maximize text-primary p-0" v-if="!isExpanded"/>
-            <i class="fa fa-window-minimize text-primary p-0" v-else/>         
+            <i class="fa fa-window-minimize text-primary p-0" v-else/>
           </span>
         </div>
       </div>
@@ -42,22 +42,39 @@
       </div>
       <div class="row py-2">
         <div class="col">
-          <button v-if="false" type="button" class="btn btn-primary float-right" @click="onGoBtnClicked()">
+          <button
+            v-if="false"
+            type="button"
+            class="btn btn-primary float-right"
+            @click="onGoBtnClicked()"
+          >
             <span style="font-size: 16px;">
               <i class="fa fa-plus text-white mr-2"/>Let's Go!
             </span>
           </button>
-          <button v-if="true" class="btn btn-success disabled disabled-light pr-3 float-right" @click="onGoBtnClicked()">
+          <button
+            v-if="true"
+            class="btn btn-success disabled disabled-light pr-3 float-right"
+            @click="onGoBtnClicked()"
+          >
             <span style="font-size: 16px;">
               <i class="fa fa-check text-white mr-2"/>Going
             </span>
           </button>
-          <button v-if="true" type="button" class="btn btn-warning disabled disabled-light px-3 float-right" @click="onGoBtnClicked()">
-            <span style="font-size: 16px;">
-              Pending...
-            </span>
+          <button
+            v-if="true"
+            type="button"
+            class="btn btn-warning disabled disabled-light px-3 float-right"
+            @click="onGoBtnClicked()"
+          >
+            <span style="font-size: 16px;">Pending...</span>
           </button>
-          <button v-if="true" type="button" class="btn btn-danger disabled disabled-light pr-3 float-right" @click="onGoBtnClicked()">
+          <button
+            v-if="true"
+            type="button"
+            class="btn btn-danger disabled disabled-light pr-3 float-right"
+            @click="onGoBtnClicked()"
+          >
             <span style="font-size: 16px;">
               <i class="fa fa-times text-white mr-2"/>Cancel
             </span>
@@ -70,6 +87,14 @@
 
 <script>
 const SCORE_STR = "Score";
+
+const FORMATTED_DATE_OPTIONS = {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit"
+};
 
 export default {
   name: "OutingCard",
@@ -95,18 +120,28 @@ export default {
         // FETCH OUTING DATA
       }
     }
+  },
+  computed: {
+    formattedDate: function() {
+      const milliseconds = this.outing.datetime.seconds * 1000;
+      const date = new Date(milliseconds);
+      return date.toLocaleString(undefined, FORMATTED_DATE_OPTIONS);
+    }
   }
 };
 </script>
 
 <style scoped>
-.disabled, .disabled-light {
+.disabled,
+.disabled-light {
   opacity: 1;
 }
-.btn-warning:focus, .disabled-light {
+.btn-warning:focus,
+.disabled-light {
   box-shadow: none;
 }
-.btn-success:focus, .disabled-light {
+.btn-success:focus,
+.disabled-light {
   box-shadow: none;
 }
 </style>

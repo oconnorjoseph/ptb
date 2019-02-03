@@ -27,6 +27,11 @@ export default {
       outings: []
     };
   },
+  watch: {
+      outings: function() {
+          console.log(this.outings);
+      }
+  },
   computed: mapState(["db"]),
   created: function() {
     this.db.outings.subscribeAllOutings(this.outings);
