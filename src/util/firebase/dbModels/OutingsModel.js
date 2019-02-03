@@ -6,8 +6,6 @@ class OutingsModel {
     this.outingUnsubscriber;
   }
 
-  // lifecycle methods
-
   // creates outing, returns id of created outing
   async create(
     organizer_id,
@@ -94,8 +92,6 @@ class OutingsModel {
         });
     }
   }
-
-  // methods
 }
 
 export default OutingsModel;
