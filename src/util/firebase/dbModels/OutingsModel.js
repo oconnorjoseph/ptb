@@ -1,3 +1,5 @@
+import firebase from "firebase";
+
 class OutingsModel {
   constructor(db) {
     this.db = db;
@@ -22,7 +24,7 @@ class OutingsModel {
     const outingRef = this.outingsRef.add(outing);
     outingRef.collection("attendees").add({
       user_id: this.db.users.getCurrentUserId(),
-      joined: this.db.FieldValue.serverTimestamp(),
+      joined: Firebase.ServerValue.TIMESTAMP,
       status: "going"
     });
     this.db.users.makeOuting(outingRef.id, undefined);

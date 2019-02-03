@@ -1,3 +1,5 @@
+import firebase from "firebase";
+
 class GroupsModel {
   constructor(db) {
     this.db = db;
@@ -61,7 +63,7 @@ class GroupsModel {
         .collection("attendees")
         .add({
           user_id: user_id,
-          joined: this.db.FieldValue.serverTimestamp(),
+          joined: firebase.ServerValue.TIMESTAMP,
           status: grantedUserStatus
         });
 
