@@ -56,7 +56,7 @@ class GroupsModel {
       false
     );
     if (grantedUserStatus) {
-      this.db.outings
+      this.db.outings.outingsRef
         .doc(outing_id)
         .collection("attendees")
         .add({
