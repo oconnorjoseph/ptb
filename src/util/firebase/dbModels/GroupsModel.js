@@ -112,7 +112,7 @@ class GroupsModel {
         .doc(outing_id)
         .collection("attendees")
         .where("status", "==", "pending")
-        .sortBy("joined")
+        .orderBy("joined")
         .limit(1)
         .onSnapshot(querySnapshot => {
           querySnapshot.forEach(doc => {

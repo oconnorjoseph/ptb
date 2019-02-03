@@ -70,7 +70,7 @@ class UsersModel {
       this.myOutingsUnsubscriber = this.usersRef
         .doc(user_id)
         .collection("myOutings")
-        .sortBy("datetime")
+        .orderBy("datetime")
         .limit(20)
         .onSnapshot(async querySnapshot => {
           outingsArray.length = 0;
@@ -112,7 +112,7 @@ class UsersModel {
       this.userOutingsUnsubscriber = this.usersRef
         .doc(user_id)
         .collection("outings")
-        .sortBy("datetime")
+        .orderBy("datetime")
         .limit(20)
         .onSnapshot(async querySnapshot => {
           outingsArray.length = 0;
