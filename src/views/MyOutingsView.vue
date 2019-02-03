@@ -2,7 +2,7 @@
   <div :id="this.$options.name">
     <div class="row">
       <div class="col">
-        <outings-list :outings="outings" :db="db" />
+        <outings-list :outings="myOutings" />
       </div>
     </div>
   </div>
@@ -18,12 +18,12 @@ export default {
   },
   data: function() {
     return {
-      outings: []
+      myOutings: []
     }
   },
   computed: mapState(["db"]),
   created: function() {
-    this.db.outings.subscribeAllOutings(this.outings);
+    this.db.outings.subscribeAllOutings(this.myOutings);
   },
   destroyed: function() {
     this.db.outings.unsubscribeAllOutings();

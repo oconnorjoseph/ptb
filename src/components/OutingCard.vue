@@ -22,7 +22,7 @@
           <h5 class="card-text text-nowrap text-left">Organizer:</h5>
         </div>
         <div class="col">
-          <h5 class="card-text text-nowrap text-left">{{outingDetails.organizer}}</h5>
+          <h5 class="card-text text-nowrap text-left">{{organizer}}</h5>
         </div>
       </div>
       <div class="row pt-2">
@@ -30,14 +30,14 @@
           <h5 class="card-text text-nowrap text-left">Location:</h5>
         </div>
         <div class="col">
-          <h5 class="card-text text-nowrap text-left">{{outingDetails.location}}</h5>
+          <h5 class="card-text text-nowrap text-left">{{location}}</h5>
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col">
           <h5 class="card-text text-nowrap text-left">Description:</h5>
-          <h6 class="card-text text-left pl-4">{{outingDetails.desc}}</h6>
+          <h6 class="card-text text-left pl-4">{{desc}}</h6>
         </div>
       </div>
       <div class="row py-2">
@@ -106,30 +106,25 @@ export default {
   data: function() {
     return {
       isShowingDetails: false,
-      outingDetails: {}
+      organizer: null,
+      location: null,
+      desc: null
     };
   },
   methods: {
     onGoBtnClicked: function() {
       //
     },
+    onOutingSnapshot: function(data) {
+      this.organizer = data.organizer;
+      this.location = data.location;
+      this.desc = data.desc;
+    },
     detatchOutingDetails: function() {
       this.db.outings.unsubscribeOuting(this.outing.id);
-      this.outingDetails = {};
     },
     attachOutingDetails: function() {
-      this.db.outings.subscribeOuting(this.outingDetails, this.outing.id);
-    }
-  },
-  computed: {
-    formattedDate: function() {
-      const milliseconds = this.outing.datetime.seconds * 1000;
-      const date = new Date(milliseconds);
-      return date.toLocaleString(undefined, FORMATTED_DATE_OPTIONS);
-    },
-    hasDetails: function() {
-      console.log(this.outingDetails);
-      return this.outingDetails && this.outingDetails.length > 0;
+      this.db.outings.subscribeOuting(this.outing.id, this.onOutingSnapshot);
     }
   },
   watch: {
@@ -139,6 +134,16 @@ export default {
       } else {
         this.detatchOutingDetails();
       }
+    }
+  },
+  computed: {
+    formattedDate: function() {
+      const milliseconds = this.outing.datetime.seconds * 1000;
+      const date = new Date(milliseconds);
+      return date.toLocaleString(undefined, FORMATTED_DATE_OPTIONS);
+    },
+    hasDetails: function() {
+      return this.desc;
     }
   },
   destroyed: function() {

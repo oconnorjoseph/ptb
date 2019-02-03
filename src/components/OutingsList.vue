@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   name: "OutingsList",
   components: {
@@ -26,8 +24,11 @@ export default {
     outings: {
       type: Array,
       required: false
+    },
+    db: {
+      type: Object,
+      required: true
     }
-  },
-  computed: mapState(["db"])
+  }
 };
 </script>
