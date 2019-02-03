@@ -1,13 +1,13 @@
 class UsersModel {
   constructor(db) {
     this.db = db;
-    this.usersRef = this.db.collection("users");
-    this.userEventsUnsubscriber;
+    this.usersRef = db.dbRef.collection("user");
+    this.userOutingsUnsubscriber;
   }
 
   // adds names to usersArray
   async augmentNamesArray(usersArray, alphabetical = false) {
-    const querySnapshot = await this.usersRef.get();
+    const querySnapshot = await this.db.usersRef.get();
     for (var i = 0; i < usersArray.length; i++) {
       const name_data = querySnapshot.docs().find(doc => {
         doc.id == usersArray[i].id;
@@ -47,40 +47,27 @@ class UsersModel {
   }
 
   // eventsArray =>
-  //    all events user is
-  /*
-  subscribeUserEvents(eventsArray, user_id) {
-    const querySnapshot = this.usersRef
-      .doc(user_id)
-      .collection("events")
-      .onSnapshot(querySnapshot => {
-        for (var i = 0; i < usersArray.length; i++) {
-          const name_data = querySnapshot.docs().find(doc => {
-            doc.id == usersArray[i].id;
-          });
-          usersArray[i].firstName = name_data.firstName;
-          usersArray[i].lastName = name_data.lastName;
-        }
-      });
-
-    if (!this.userEventsUnsubscriber) {
-      this.userEventsUnsubscriber = this.usersRef
-        .where("deleted", "==", false)
-        .orderBy("datetime")
-        .onSnapshot(querySnapshot => {
-          eventsArray.length = 0;
+  //    all events user i
+  subscribeUserOutings(outingsArray, user_id) {
+    if (!this.userOutingsUnsubscriber) {
+      this.userOutingsUnsubscriber = this.usersRef
+        .doc(user_id)
+        .collection("outings")
+        .sortBy("datetime")
+        .limit(20)
+        .onSnapshot(async querySnapshot => {
+          outingsArray.length = 0;
+          var promises = [];
           querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const outing = {
-              id: doc.id,
-              title: data.title,
-              datetime: data.datetime
-            };
-            eventsArray.push(outing);
+            promises.push(this.db.outingsRef.doc(doc.id).get());
+          });
+          const outingsSnapshot = await Promise.all(promises);
+          outingsSnapshot.forEach(doc => {
+            outingsArray.push(doc.data());
           });
         });
     }
-  }*/
+  }
 }
 
 export default UsersModel;
