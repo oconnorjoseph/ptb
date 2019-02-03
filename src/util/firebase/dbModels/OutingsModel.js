@@ -55,6 +55,7 @@ class OutingsModel {
     if (!this.allOutingsUnsubscriber) {
       this.allOutingsUnsubscriber = this.outingsRef
         .where("deleted", "==", false)
+        .where("available", "==", true)
         .orderBy("datetime")
         .onSnapshot(querySnapshot => {
           outingsArray.length = 0;
@@ -69,6 +70,15 @@ class OutingsModel {
           });
         });
     }
+  }
+
+  async updateAllOutings() {
+    const querySnapshot = await this.outingsRef
+        .where("deleted", "==", false)
+        .where("available", "==", true).get();
+    querySnapshot.forEach(doc => {
+      
+    })
   }
 
   unsubscribeOuting(outing_id) {
