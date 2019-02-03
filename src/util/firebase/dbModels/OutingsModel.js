@@ -73,10 +73,7 @@ class OutingsModel {
   }
 
   async updateAllOutings() {
-    const querySnapshot = await this.outingsRef
-      .where("deleted", "==", false)
-      .where("available", "==", true)
-      .get();
+    const querySnapshot = await this.outingsRef.get();
     querySnapshot.forEach(async doc => {
       this.db.users.makeOuting(doc.id, doc.data().datetime);
       const attendees = await this.outingsRef.collection("attendees").get();
@@ -123,11 +120,10 @@ class OutingsModel {
   subscribeUserOutingStatus(outing_id, OnSnapshot) {
     const user_id = this.db.users.getCurrentUserId();
     const decision = function(outing_id) {
-      if (Object.keys(this.userOutingUnsubscribers[outing_id]).length == 3) {
-        const userStatus = this.userOutingUnsubscribers[outing_id].userStatus;
-        const closedOuting = this.userOutingUnsubscribers[outing_id]
-          .closedOuting;
-        const outingFull = this.userOutingUnsubscribers[outing_id].outingFull;
+      if (Object.keys(this.userOutingData[outing_id]).length == 3) {
+        const userStatus = this.userOutingData[outing_id].userStatus;
+        const closedOuting = this.userOutingData[outing_id].closedOuting;
+        const outingFull = this.userOutingData[outing_id].outingFull;
         if (userStatus == "going") {
           OnSnapshot("GOING");
         } else if (!closedOuting && !outingFull) {
@@ -143,9 +139,9 @@ class OutingsModel {
         }
       }
     };
-    if (!(outing_id in this.userOutingUnsubscribers)) {
-      this.userOutingUnsubscribers[outing_id] = [];
-      this.userOutingUnsubscribers[outing_id].push(
+    if (!(outing_id in this.userOutingStatusUnsubscribers)) {
+      this.userOutingStatusUnsubscribers[outing_id] = [];
+      this.userOutingStatusUnsubscribers[outing_id].push(
         this.outingsRef.doc(outing_id).onSnapshot(querySnapshot => {
           this.userOutingData[outing_id].outingFull =
             querySnapshot.data().max_people >= querySnapshot.data().going_count;
@@ -155,7 +151,7 @@ class OutingsModel {
           decision(outing_id);
         })
       );
-      this.userOutingUnsubscribers[outing_id].push(
+      this.userOutingStatusUnsubscribers[outing_id].push(
         this.outingsRef
           .doc(outing_id)
           .collection("attendees")
