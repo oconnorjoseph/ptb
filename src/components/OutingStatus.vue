@@ -72,13 +72,13 @@ export default {
   },
   methods: {
     onGoBtnClicked: function() {
-      db.groups.addCurrentUser(outing_id);
+      db.groups.addCurrentUser(this.outingId);
     },
     onCancelBtnClicked: function() {
-      db.groups.removeCurrentUser(outing_id);
+      db.groups.removeCurrentUser(this.outingId);
     },
     onWaitlistBtnClicked: function() {
-      db.groups.addCurrentUser(outing_id);
+      db.groups.addCurrentUser(this.outingId);
     },
     onSnapshot: function(userOutingStatus) {
       this.userOutingStatus = userOutingStatus;

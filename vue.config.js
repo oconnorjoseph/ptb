@@ -1,5 +1,3 @@
-const webpack = require("webpack");
-
 module.exports = {
   pwa: {
     name: "Pop The Bubble",
@@ -12,13 +10,5 @@ module.exports = {
       msTileImage: "img/icons/msapplication-icon-144x144.png"
     }
   },
-  integrity: true,
-  configureWebpack: {
-    plugins: [
-      new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
-      })
-    ]
-  }
+  integrity: true
 };
