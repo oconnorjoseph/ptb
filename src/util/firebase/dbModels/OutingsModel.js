@@ -183,7 +183,7 @@ class OutingsModel {
       this.outingsRef.doc(outing_id).update({
         going_count: querySnapshot.data().going_count + 1
       });
-      this.users.setOuting(
+      this.db.users.setOuting(
         outing_id,
         user_id,
         "going",
@@ -191,7 +191,7 @@ class OutingsModel {
       );
       return "going";
     } else if (!userStatus) {
-      this.users.setOuting(
+      this.db.users.setOuting(
         outing_id,
         user_id,
         "pending",
