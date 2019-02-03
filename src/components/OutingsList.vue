@@ -2,7 +2,7 @@
   <div :id="this.$options.name">
     <div class="row p-2">
       <div class="col">
-        <template v-for="outing in plannedOutings">
+        <template v-for="outing in outings">
           <div class="row py-2" :key="outing.id">
             <div class="col">
               <editable-outing-card v-if="editable" :outing="outing" :db="db" :outing-id="outing.id"/>
@@ -34,16 +34,6 @@ export default {
     db: {
       type: Object,
       required: true
-    }
-  },
-  data: function() {
-    return {
-      plannedOutings: [{
-        title: "MET",
-        datetime: {seconds: 1549197377},
-        desc: "Bla bla bla"
-        
-      }]
     }
   }
 };

@@ -53,7 +53,7 @@ export default {
   },
   data: function() {
     return {
-      userOutingStatus: GOING
+      userOutingStatus: null
     };
   },
   computed: {
@@ -72,26 +72,23 @@ export default {
   },
   methods: {
     onGoBtnClicked: function() {
-      // TODO:
-      // db.groups.addCurrentUser(outing_id);
+      db.groups.addCurrentUser(outing_id);
     },
     onCancelBtnClicked: function() {
-      // TODO:
-      // db.groups.removeCurrentUser(outing_id);
+      db.groups.removeCurrentUser(outing_id);
     },
     onWaitlistBtnClicked: function() {
-      // TODO:
-      // db.groups.addCurrentUser(outing_id);
+      db.groups.addCurrentUser(outing_id);
     },
     onSnapshot: function(userOutingStatus) {
       this.userOutingStatus = userOutingStatus;
     }
   },
   created: function() {
-    //TODO: this.db.outings.subscribeUserOutingStatus(this.outingId, this.onSnapshot);
+    this.db.outings.subscribeUserOutingStatus(this.outingId, this.onSnapshot);
   },
   destroyed: function() {
-    //TODO: this.db.outings.unsubscribeUserOutingStatus(this.outingId);
+    this.db.outings.unsubscribeUserOutingStatus(this.outingId);
   }
 };
 </script>

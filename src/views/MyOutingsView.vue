@@ -23,10 +23,10 @@ export default {
   },
   computed: mapState(["db"]),
   created: function() {
-    //TODO: this.db.outings.subscribeCurrentUserOutings(this.myOutings);
+    this.db.outings.subscribeUserOutings(this.myOutings);
   },
   destroyed: function() {
-    //TODO: this.db.outings.unsubscribeCurrentUserOutings();
+    this.db.outings.unsubscribeUserOutings();
   }
 };
 </script>
